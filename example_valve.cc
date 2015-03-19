@@ -36,7 +36,6 @@ main(int argc, char **argv) {
     regions[205] = region_Air;
     regions[206] = region_Air;
 
-    char filename[] = "valve.msh";
     MeshFile *meshfile = new MeshFile("valve.msh");
     Mesh *mesh = new Mesh(meshfile);
 
@@ -134,11 +133,27 @@ main(int argc, char **argv) {
 
     // Export the DoF's and the coordinates of the corresponding nodes.
 
-    for (int ind=0; ind < num_free; ind++) {
+/*    for (int ind=0; ind < num_free; ind++) {
         int node = nodes_free[ind];
         std::cout << mesh->nodes[node*3] << " " << mesh->nodes[node*3+1]
                                          << " " << sol_dense(ind, 0)
                                          << std::endl;
+    }
+*/
+    for (int ind_triangle=0; ind_triangle < mesh->num_triangles; ind_triangle++) {
+        Mesh_Element *elem = mesh->elements[ind_triangle];
+        for (int ind_node=0; ind_node < 3; ind_node++) {
+            int node = elem->nodes[ind_node]-1;
+
+            std::vector<int>::iterator p_free;
+            p_free = std::find(nodes_free.begin(), nodes_free.end(), node);
+
+            if (p_free != nodes_free.end()) {
+                std::cout << mesh->nodes[node*3]   << " "
+                          << mesh->nodes[node*3+1] << " "
+                          << sol_dense(p_free - nodes_free.begin(), 0) << std::endl;
+            }
+        }
     }
 
 

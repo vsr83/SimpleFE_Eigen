@@ -190,7 +190,6 @@ main(int argc, char **argv) {
     regions[205] = region_Air;
     regions[206] = region_Air;
 
-    char filename[] = "valve.msh";
     MeshFile *meshfile = new MeshFile("valve.msh");
     Mesh *mesh = new Mesh(meshfile);
 
