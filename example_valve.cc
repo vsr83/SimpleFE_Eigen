@@ -40,7 +40,8 @@ main(int argc, char **argv) {
     Mesh *mesh = new Mesh(meshfile);
 
     // Assemble the global stiffness and mass matrices.
-    Assembly ass(mesh, 6, regions);
+    Assembly ass2(mesh, 6, regions);
+    Assembly ass(ass2);
 
     std::map <int, int> partition;
     for (int ind_node=0; ind_node < mesh->num_nodes; ind_node++) {

@@ -38,6 +38,7 @@ class Mesh {
   int num_nodes, num_lines, num_triangles;
 
   Mesh(MeshFile *meshfile_in);
+  Mesh(const Mesh &other);
   ~Mesh();
 };
 

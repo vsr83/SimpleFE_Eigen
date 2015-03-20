@@ -96,6 +96,25 @@ Mesh::Mesh(MeshFile *meshfile_in) {
   }
 }
 
+Mesh::Mesh(const Mesh &other) {
+    num_nodes = other.num_nodes;
+    num_lines = other.num_lines;
+    num_triangles = other.num_triangles;
+    num_elements = other.num_elements;
+
+    elements.clear();
+    meshfile = other.meshfile;
+    for (int ind_element=0;ind_element < num_elements; ind_element++) {
+        Mesh_Element *elem = new Mesh_Element(*other.elements[ind_element]);
+        elements.push_back(elem);
+    }
+
+    nodes = new double[num_nodes*3];
+    std::copy(other.nodes, other.nodes+num_nodes*3, nodes);
+    lines = other.lines;
+    triangles = other.triangles;
+}
+
 Mesh::~Mesh() {
   delete nodes;
   for (int ind_element=0;ind_element < num_elements; ind_element++) {

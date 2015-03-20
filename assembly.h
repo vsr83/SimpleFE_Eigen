@@ -57,6 +57,7 @@ public:
     Eigen::MatrixXd excitation;
     int num_gauss;
     Assembly(Mesh *_mesh, int _num_gauss, std::map <int, Region> &_regions);
+    Assembly(const Assembly &other);
     ~Assembly();
 };
 

@@ -164,6 +164,30 @@ Assembly::Assembly(Mesh *_mesh, int _num_gauss, std::map <int, Region> &_regions
     }
 }
 
+Assembly::Assembly(const Assembly &other) {
+    mesh = other.mesh;
+    regions = other.regions;
+
+    gauss_u = other.gauss_u;
+    gauss_v = other.gauss_v;
+    gauss_w = other.gauss_w;
+
+    mats_bfgrad = other.mats_bfgrad;
+    mats_bf = other.mats_bf;
+
+    global_stiff = new Eigen::SparseMatrix<double>(*other.global_stiff);
+    global_mass  = new Eigen::SparseMatrix<double>(*other.global_mass);
+
+    excitation = other.excitation;
+    num_gauss = other.num_gauss;
+
+    elements.clear();
+    for (int ind_triangle=0; ind_triangle < mesh->num_triangles; ind_triangle++) {
+        Element *elem = new Element(*other.elements[ind_triangle]);
+        elements.push_back(elem);
+    }
+}
+
 Assembly::~Assembly() {
     for (int ind_triangle=0; ind_triangle < mesh->num_triangles; ind_triangle++) {
         delete elements[ind_triangle];
