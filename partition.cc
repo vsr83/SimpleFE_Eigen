@@ -29,10 +29,7 @@ Partition::Partition(Mesh *mesh, std::map <int, int> _physmap) {
     parts_right.reserve(num_partitions*num_partitions);
 
     // Initialize the node lists for all partitions.
-    for (int ind_part = 0; ind_part < num_partitions; ind_part++) {
-        std::vector<int> emptyvec;
-        node_parts.push_back(emptyvec);
-    }
+    node_parts = std::vector<std::vector<int> >(num_partitions);
 
     // Assign all nodes to physical numbers given in elements. Lines are
     // given higher priority.
