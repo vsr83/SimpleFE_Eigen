@@ -181,7 +181,6 @@ Assembly::Assembly(const Assembly &other) {
     excitation = other.excitation;
     num_gauss = other.num_gauss;
 
-    elements.clear();
     for (int ind_triangle=0; ind_triangle < mesh->num_triangles; ind_triangle++) {
         Element *elem = new Element(*other.elements[ind_triangle]);
         elements.push_back(elem);

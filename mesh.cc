@@ -72,9 +72,6 @@ Mesh::Mesh(MeshFile *meshfile_in) {
   std::string elemstr = (*elementfield)[0];
   assert(num_elements == atoi(elemstr.c_str()));
 
-  elements.clear();
-  lines.clear();
-  triangles.clear();
   num_lines = 0;
   num_triangles = 0;
 
@@ -102,7 +99,6 @@ Mesh::Mesh(const Mesh &other) {
     num_triangles = other.num_triangles;
     num_elements = other.num_elements;
 
-    elements.clear();
     meshfile = other.meshfile;
     for (int ind_element=0;ind_element < num_elements; ind_element++) {
         Mesh_Element *elem = new Mesh_Element(*other.elements[ind_element]);

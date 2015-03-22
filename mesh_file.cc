@@ -27,7 +27,6 @@ MeshFile::MeshFile(char *filestr) {
   inputfile = new std::ifstream(filename.c_str(), std::ios_base::in);
 
   std::string line;
-  strlist.clear();
   while(std::getline(*inputfile, line, '\n')) {
     strlist.push_back(line);
   }

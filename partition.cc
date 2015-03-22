@@ -16,38 +16,21 @@
 */
 
 #include "partition.h"
+#include <algorithm>
 
 Partition::Partition(Mesh *mesh, std::map <int, int> _physmap) {
     map_physpart   = _physmap;
-    num_partitions = -1;
-
-    // Ensure that all physical numbers are associated to some partition.
-    for (int ind_element=0; ind_element < mesh->num_elements; ind_element++) {
-        int phys = mesh->elements[ind_element]->physical;
-        if (map_physpart[phys] == 0) {
-            map_physpart[phys] = 0;
-        }
-    }
 
     // Find out the number of partitions.
-    for (std::map<int, int>::iterator it = map_physpart.begin();
-                                      it!= map_physpart.end(); ++it) {
-        int part = it->second;
-        int phys = it->first;
+    num_partitions = (*std::max_element(map_physpart.begin(), map_physpart.end(),
+                                        map_physpart.value_comp())).second + 1;
 
-        assert (part >= 0);
-        if (part+1 > num_partitions) {
-            num_partitions = part+1;
-        }
-        map_physpart[phys] = part;
-    }
     parts_left.reserve (num_partitions*num_partitions);
     parts_right.reserve(num_partitions*num_partitions);
 
     // Initialize the node lists for all partitions.
     for (int ind_part = 0; ind_part < num_partitions; ind_part++) {
         std::vector<int> emptyvec;
-        emptyvec.clear();
         node_parts.push_back(emptyvec);
     }
 
@@ -106,8 +89,8 @@ Partition::Partition(Mesh *mesh, std::map <int, int> _physmap) {
             }
             Pleft.setFromTriplets(Tleft.begin(), Tleft.end());
             Pright.setFromTriplets(Tright.begin(), Tright.end());
-            std::cout << "Part (" << ind_part1 << ", " << ind_part2 << ") "
-                      << size_part1 << "x" << size_part2 << std::endl;
+//          std::cout << "Part (" << ind_part1 << ", " << ind_part2 << ") "
+//                    << size_part1 << "x" << size_part2 << std::endl;
             parts_left.push_back(Pleft);
             parts_right.push_back(Pright);
         }
