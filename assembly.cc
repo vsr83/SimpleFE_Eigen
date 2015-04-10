@@ -23,6 +23,8 @@ Assembly::Assembly(Mesh *_mesh, int _num_gauss, std::map <int, Region> &_regions
     mesh = _mesh;
     num_gauss = _num_gauss;
     regions = _regions;
+    global_stiff = 0;
+    global_mass = 0;
 
     // Initialize the data structures used in Gaussian integration.
 
@@ -44,7 +46,7 @@ Assembly::Assembly(Mesh *_mesh, int _num_gauss, std::map <int, Region> &_regions
 
     for (int ind_triangle=0; ind_triangle < mesh->num_triangles; ind_triangle++) {
          int ind_elem = mesh->triangles[ind_triangle];
-         Mesh_Element *elem = mesh->elements[ind_elem];
+         Mesh_Element *elem = mesh->elements.at(ind_elem);
 
          // Find the corner nodes of the triangles.
          double x[elem->nnodes], y[elem->nnodes], z[elem->nnodes];         
@@ -90,8 +92,8 @@ Assembly::Assembly(Mesh *_mesh, int _num_gauss, std::map <int, Region> &_regions
     Eigen::MatrixXd Me(num_bf, num_bf);
     for (int ind_triangle=0; ind_triangle< mesh->num_triangles; ind_triangle++) {
         Element *elem = elements[ind_triangle];
-        Se = Se*0;
-        Me = Me*0;
+        Se.setZero();
+        Me.setZero();
 
         Eigen::MatrixXd Jterm(2, 2);
         Eigen::MatrixXd Jinv = elem->Je.inverse();
@@ -152,6 +154,7 @@ Assembly::Assembly(Mesh *_mesh, int _num_gauss, std::map <int, Region> &_regions
     // Compute the excitation vector analytically.
 
     excitation = Eigen::MatrixXd(mesh->num_nodes, 1);
+    excitation.setZero();
     for (int ind_triangle=0; ind_triangle < mesh->num_triangles; ind_triangle++) {
         Element *elem = elements[ind_triangle];
         double Js = regions[elem->physical].Js;
